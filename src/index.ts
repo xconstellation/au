@@ -7,7 +7,14 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 
-// Home route - HTML
+const keysDB = {
+  'ABC123': { username: 'Alice', uid: 1, expiration: new Date(2025, 11, 31) },
+  'DEF456': { username: 'Bob', uid: 2, expiration: new Date(2025, 5, 30) },
+  'GHI789': { username: 'Charlie', uid: 3, expiration: new Date(2024, 11, 31) },
+}
+
+app.use(express.json())
+
 app.get('/', (req, res) => {
   res.type('html').send(`
     <!doctype html>
@@ -15,36 +22,40 @@ app.get('/', (req, res) => {
       <head>
         <meta charset="utf-8"/>
         <title>Express on Vercel</title>
-        <link rel="stylesheet" href="/style.css" />
       </head>
       <body>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/api-data">API Data</a>
-          <a href="/healthz">Health</a>
-        </nav>
-        <h1>Welcome to Express on Goyim 🚀</h1>
-        <p>This is a minimal example without a database or forms.</p>
-        <img src="/logo.png" alt="Logo" width="120" />
+        <h1>who.ru</h1>
+        <p>crackers are NOT welcome here</p>
       </body>
     </html>
   `)
 })
 
-app.get('/about', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'))
+// -----------------------------
+// Auth endpoint
+// Example: /auth?key=ABC123
+// -----------------------------
+app.get('/auth', (req, res) => {
+  const { key } = req.query
+
+  if (!key || !keysDB[key]) {
+    return res.status(401).send('Unauthorized: Invalid key')
+  }
+
+  const record = keysDB[key]
+  const now = new Date()
+
+  if (now > record.expiration) {
+    return res.status(401).send('Unauthorized: Key expired')
+  }
+
+  // Key is valid, return "script"
+  res.type('text').send(`print('hello from the server')`)
 })
 
-// Example API endpoint - JSON
-app.get('/api-data', (req, res) => {
-  res.json({
-    message: 'Here is some sample API data',
-    items: ['apple', 'banana', 'cherry'],
-  })
-})
-
+// -----------------------------
 // Health check
+// -----------------------------
 app.get('/healthz', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
 })
