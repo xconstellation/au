@@ -8,10 +8,10 @@ const __dirname = path.dirname(__filename)
 const app = express()
 
 const keysDB = {
-  'ABC123': { username: 'Alice', uid: 1, expiration: new Date(2025, 11, 31) },
-  'DEF456': { username: 'Bob', uid: 2, expiration: new Date(2025, 5, 30) },
-  'GHI789': { username: 'Charlie', uid: 3, expiration: new Date(2024, 11, 31) },
-}
+  'b20f1885-052e-414c-94ad-54f8d16b70dd': { username: 'newguy', uid: 1, expiration: new Date(2025, 11, 31) },
+  '46991f86-9027-4aed-be08-d69d090d99e9': { username: 'Bob', uid: 2, expiration: new Date(2025, 5, 30) },
+  '66a02209-467d-4e00-ac43-eaf01ded6a4c': { username: 'Charlie', uid: 3, expiration: new Date(2024, 11, 31) },
+}//t
 
 app.use(express.json())
 
