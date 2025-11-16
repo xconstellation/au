@@ -36,22 +36,23 @@ app.get('/', (req, res) => {
 // Example: /auth?key=ABC123
 // -----------------------------
 app.get('/auth', (req, res) => {
-  const { key } = req.query
+  const key = req.query.key;
 
-  if (!key || !keysDB[key]) {
-    return res.status(401).send('Unauthorized: Invalid key')
+  if (typeof key !== 'string' || !keysDB[key]) {
+    return res.status(401).send('Unauthorized: Invalid key');
   }
 
-  const record = keysDB[key]
-  const now = new Date()
+  const record = keysDB[key];
+  const now = new Date();
 
   if (now > record.expiration) {
-    return res.status(401).send('Unauthorized: Key expired')
+    return res.status(401).send('Unauthorized: Key expired');
   }
 
   // Key is valid, return "script"
-  res.type('text').send(`print('hello from the server')`)
-})
+  res.type('text').send(`print('hello from the server')`);
+});
+
 
 // -----------------------------
 // Health check
